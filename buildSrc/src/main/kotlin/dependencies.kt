@@ -1,14 +1,14 @@
 import org.gradle.api.JavaVersion
 
 object Config {
-    val compileSdk                      = 29
-    val targetSdk                       = 29
+    val compileSdk                      = 30
+    val targetSdk                       = 30
     val minSdk                          = 21
-    val buildTools                      = "29.0.2"
+    val buildTools                      = "30.0.2"
 }
 
 object Versions {
-    val gradle_plugin_android           = "4.2.0-alpha07"
+    val gradle_plugin_android           = "4.2.0-alpha11"
     val gradle_plugin_google_services   = "4.3.3"
     val gradle_plugin_fabric            = "1.31.2"
 
@@ -16,10 +16,12 @@ object Versions {
     val kotlin                          = "1.4.0"
     val kotlin_coroutines               = "1.3.9"
 
+    val accompanist_coil                = "0.2.2"
     val android_material                = "1.2.0-alpha03"
     val androidx                        = "1.0.0"
     val androidx_activity               = "1.2.0-alpha07"
     val androidx_appCompat              = "1.2.0-alpha01"
+    val androidx_compose                = "1.0.0-alpha03"
     val androidx_constraintLayout       = "1.1.3"
     val androidx_core                   = "1.2.0-rc01"
     val androidx_fragment               = "1.2.1"
@@ -33,7 +35,7 @@ object Versions {
     val glide                           = "4.11.0"
     val graphql                         = "2.3.0"
     val gson                            = "2.8.6"
-    val koin                            = "2.1.6"
+    val koin                            = "2.2.0-beta-1"
     val leakcanary                      = "2.4"
     val okio                            = "2.7.0"
     val okhttp                          = "4.8.1"
@@ -77,6 +79,18 @@ object Dependencies {
     val androidx_navigation_ui_ktx = "androidx.navigation:navigation-ui-ktx:${Versions.androidx_navigation}"
     val androidx_recyclerview = "androidx.recyclerview:recyclerview:${Versions.androidx_recyclerview}"
 
+    // COMPOSE
+    val androidx_compose_runtime = "androidx.compose.runtime:runtime:${Versions.androidx_compose}"
+    val androidx_compose_savedInstanceState = "androidx.compose.runtime:runtime-saved-instance-state:${Versions.androidx_compose}"
+    val androidx_compose_liveData = "androidx.compose.runtime:runtime-livedata:${Versions.androidx_compose}"
+    val androidx_compose_foundation = "androidx.compose.foundation:foundation:${Versions.androidx_compose}"
+    val androidx_compose_layout = "androidx.compose.foundation:foundation-layout:${Versions.androidx_compose}"
+    val androidx_compose_ui = "androidx.compose.ui:ui:${Versions.androidx_compose}"
+    val androidx_compose_material = "androidx.compose.material:material:${Versions.androidx_compose}"
+    val androidx_compose_materialIconsExtended = "androidx.compose.material:material-icons-extended:${Versions.androidx_compose}"
+    val androidx_compose_tooling = "androidx.ui:ui-tooling:${Versions.androidx_compose}"
+    val androidx_compose_test = "androidx.ui:ui-test:${Versions.androidx_compose}"
+
     // MATERIAL
     val android_material = "com.google.android.material:material:${Versions.android_material}"
 
@@ -114,6 +128,9 @@ object Dependencies {
     // GLIDE
     val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
     val glide_okhttp_integration = "com.github.bumptech.glide:okhttp3-integration:${Versions.glide}"
+
+    // COIL
+    val accompanist_coil = "dev.chrisbanes.accompanist:accompanist-coil:${Versions.accompanist_coil}"
 
     // TIMBER
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"

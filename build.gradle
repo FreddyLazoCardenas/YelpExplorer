@@ -1,5 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         google()
@@ -22,7 +20,7 @@ plugins {
     id "com.github.ben-manes.versions" version "0.29.0"
 }
 
-allprojects {
+subprojects {
     repositories {
         google()
         jcenter()
@@ -32,12 +30,16 @@ allprojects {
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = JavaVersion.VERSION_1_8.toString()
+
+            // Needed for Compose
+            useIR = true // it is supposed to replace:
+//            freeCompilerArgs += "-Xallow-jvm-ir-dependencies"
+//            freeCompilerArgs += "-Xskip-prerelease-check"
+//            freeCompilerArgs += "-Xskip-metadata-version-check"
         }
     }
-}
 
-subprojects {
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
             android {

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
@@ -37,7 +38,7 @@ class BusinessListFragment : Fragment() {
             }
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner) {
+        viewModel.viewState.observe(owner = viewLifecycleOwner) {
             render(it)
         }
 
@@ -69,17 +70,17 @@ class BusinessListFragment : Fragment() {
     }
 
     private fun render(viewState: BusinessListViewModel.ViewState) {
-        when (viewState) {
-            is BusinessListViewModel.ViewState.ShowLoading -> {
-                viewState.businessList?.let { showBusinessList(it) }
-            }
-            is BusinessListViewModel.ViewState.ShowBusinessList -> showBusinessList(viewState.businessList)
-            is BusinessListViewModel.ViewState.ShowError -> showError(getString(viewState.errorStringId))
-        }
+        showLoading(viewState.showLoading)
+        showError(viewState.errorStringId)
+        showBusinessList(viewState.businessListUiModel)
     }
 
-    private fun showBusinessList(uiModel: BusinessListUiModel) {
-        (binding.rvBusinessList.adapter as BusinessListAdapter).setData(uiModel.businessList)
+    private fun showLoading(showLoading: Boolean) {
+        // TOOD
+    }
+
+    private fun showBusinessList(businessListUiModel: BusinessListUiModel?) {
+        (binding.rvBusinessList.adapter as BusinessListAdapter).setData(businessListUiModel?.businessList.orEmpty())
     }
 
     private fun navigateToDetails(businessId: String) {
@@ -97,11 +98,14 @@ class BusinessListFragment : Fragment() {
         startActivity(Router.getSettingsIntent(requireContext()))
     }
 
-    private fun showError(message: String) {
-        showToast(message, Toast.LENGTH_LONG)
+    private fun showError(@StringRes errorStringId: Int?) {
+        // TODO This should be a 1 time event OR a dedicated error banner that is persistent
+        errorStringId?.let {
+            showToast(getString(it))
+        }
     }
 
-    private fun showToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+    private fun showToast(message: String, length: Int = Toast.LENGTH_LONG) {
         Toast.makeText(requireContext(), message, length).show()
     }
 }

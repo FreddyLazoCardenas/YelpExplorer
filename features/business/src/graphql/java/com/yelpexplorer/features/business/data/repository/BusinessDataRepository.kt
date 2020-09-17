@@ -28,7 +28,7 @@ class BusinessDataRepository(
                 )
             ).toDeferred().await()
 
-            val businessList = response.data()?.search?.business?.mapNotNull { it?.toDomainModel() } ?: emptyList()
+            val businessList = response.data?.search?.business?.mapNotNull { it?.toDomainModel() } ?: emptyList()
             emit(Resource.Success(businessList))
         } catch (e: ApolloException) {
             emit(Resource.Error("ERROR: ${e.message}", null))
@@ -45,7 +45,7 @@ class BusinessDataRepository(
                 )
             ).toDeferred().await()
 
-            val businessDetails = response.data()?.business?.toDomainModel()
+            val businessDetails = response.data?.business?.toDomainModel()
             if (businessDetails != null) {
                 emit(Resource.Success(businessDetails))
             } else {

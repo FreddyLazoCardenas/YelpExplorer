@@ -10,6 +10,15 @@ android {
     apollo {
         generateKotlinModels = true
     }
+
+    // Compose
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Versions.androidx_compose
+        kotlinCompilerVersion Versions.kotlin
+    }
 }
 
 dependencies {
@@ -41,6 +50,18 @@ dependencies {
     implementation Dependencies.androidx_navigation_fragment_ktx
     implementation Dependencies.androidx_navigation_ui_ktx
     implementation Dependencies.androidx_recyclerview
+
+    // COMPOSE
+    implementation Dependencies.androidx_compose_ui
+    implementation Dependencies.androidx_compose_material
+    implementation Dependencies.androidx_compose_materialIconsExtended
+    implementation Dependencies.androidx_compose_runtime
+    implementation Dependencies.androidx_compose_savedInstanceState
+    implementation Dependencies.androidx_compose_liveData
+    implementation Dependencies.androidx_compose_foundation
+    implementation Dependencies.androidx_compose_layout
+    implementation Dependencies.androidx_compose_tooling
+    implementation Dependencies.androidx_compose_test
 
     // ROOM
     implementation Dependencies.androidx_room_runtime
@@ -75,6 +96,8 @@ dependencies {
     // GLIDE
     implementation Dependencies.glide
     implementation Dependencies.glide_okhttp_integration
+
+    implementation Dependencies.accompanist_coil
 
     // TIMBER
     implementation Dependencies.timber

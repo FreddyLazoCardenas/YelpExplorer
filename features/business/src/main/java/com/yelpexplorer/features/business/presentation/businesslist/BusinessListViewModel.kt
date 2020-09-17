@@ -23,40 +23,85 @@ class BusinessListViewModel(
         data class NavigateToDetails(val businessId: String) : ViewAction()
     }
 
-    sealed class ViewState {
-        data class ShowLoading(val businessList: BusinessListUiModel?) : ViewState()
-        data class ShowBusinessList(val businessList: BusinessListUiModel) : ViewState()
-        data class ShowError(@StringRes val errorStringId: Int) : ViewState()
-    }
+    data class ViewState(
+        val showLoading: Boolean,
+        val businessListUiModel: BusinessListUiModel?,
+        @StringRes val errorStringId: Int? = null
+    )
 
     private val _viewAction = MutableLiveData<Event<ViewAction>>()
-    val viewAction: LiveData<Event<ViewAction>>
-        get() = _viewAction
+    val viewAction: LiveData<Event<ViewAction>> = _viewAction
 
-    private val _viewState: MutableLiveData<ViewState>
-    val viewState: LiveData<ViewState>
-        get() = _viewState
-
-    init {
-        _viewState = liveData<Resource<List<Business>>>(context = viewModelScope.coroutineContext + Dispatchers.Main) {
-            emitSource(
-                getBusinessListUseCase.execute(
-                    term = "sushi",
-                    location = "montreal",
-                    sortBy = "rating",
-                    limit = 20
-                ).asLiveData()
-            )
-        }.map { resource ->
-            when (resource) {
-                is Resource.Loading -> ViewState.ShowLoading(resource.data?.toBusinessListUiModel())
-                is Resource.Error -> ViewState.ShowError(R.string.error_something_went_wrong)
-                is Resource.Success -> ViewState.ShowBusinessList(resource.data.toBusinessListUiModel())
+    private val _viewState = liveData<Resource<List<Business>>>(context = viewModelScope.coroutineContext + Dispatchers.Main) {
+        emitSource(
+            getBusinessListUseCase.execute(
+                term = "sushi",
+                location = "montreal",
+                sortBy = "rating",
+                limit = 20
+            ).asLiveData()
+        )
+    }.map { resource ->
+        when (resource) {
+            is Resource.Loading -> {
+                ViewState(
+                    showLoading = true,
+                    businessListUiModel = resource.data?.toBusinessListUiModel(),
+                    errorStringId = null
+                )
             }
-        } as MutableLiveData<ViewState>
-    }
+            is Resource.Error -> {
+                ViewState(
+                    showLoading = false,
+                    businessListUiModel = resource.data?.toBusinessListUiModel(),
+                    errorStringId = R.string.error_something_went_wrong
+                )
+            }
+            is Resource.Success -> {
+                ViewState(
+                    showLoading = false,
+                    businessListUiModel = resource.data.toBusinessListUiModel(),
+                    errorStringId = null
+                )
+            }
+        }
+    } as MutableLiveData<ViewState>
+    val viewState: LiveData<ViewState> = _viewState
 
     fun onBusinessClicked(businessId: String) {
         _viewAction.value = Event(ViewAction.NavigateToDetails(businessId))
     }
+
+
+//    data class UiState<T>(
+//        val loading: Boolean = false,
+//        val exception: Exception? = null,
+//        val data: T? = null
+//    ) {
+//        val hasError: Boolean
+//            get() = exception != null
+//
+//        val initialLoad: Boolean
+//            get() = data == null && loading && !hasError
+//    }
+//
+//    fun <T> UiState<T>.copyWithResult(value: Result<T>): UiState<T> {
+//        return when (value) {
+//            is Result.Success -> copy(loading = false, exception = null, data = value.data)
+//            is Result.Error -> copy(loading = false, exception = value.exception)
+//        }
+//    }
+//
+//    ////////////////////////////////////
+//    sealed class Result<out R> {
+//        data class Success<out T>(val data: T) : Result<T>()
+//        data class Error(val exception: Exception) : Result<Nothing>()
+//    }
+//
+//    val Result<*>.succeeded
+//        get() = this is Result.Success && data != null
+//
+//    fun <T> Result<T>.successOr(fallback: T): T {
+//        return (this as? Result.Success<T>)?.data ?: fallback
+//    }
 }
